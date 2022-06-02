@@ -1,54 +1,103 @@
-const express = require ('express');
-//const req = require('express/lib/request');
-//const config = require('../../')
-const router = express.Router();
+const express = require('express');
+
 const response = require('../../../network/response');
+const { getConnection } = require('../../../model/db');
 
+const router = express.Router();
 
+var cors = require('cors')
+var allowlist = ['http://localhost:3000',''];
 
-router.get('/', function (req, res) {
-    //return 'hola get';
-    // res.send(
-    //     {
-    //         success:'success 1',
-    //     }
-    // )
-    response.success(req,res,'',200)
+var corsOptionsDelegate = function (req, callback){
+    var corOptions;
+    if (allowlist.indexOf(req.header('Origin'))!==-1){
+        corOptions = { origin:true }
+    } else {
+        corOptions ={ origin:false }
+    }
+    callback(null, corOptions)
+}
 
+router.get('/readme',cors(corsOptionsDelegate), async function (req, res){
+    const client = await getConnection();
+    
+    const query_request ={
+        text:'SELECT * FROM tbl_usersdb'
+    }
+
+    client.query(query_request)
+    .then(r => { console.log('true'); response.success(req, res, r, 200); })
+    .catch(e => { console.log('false'); response.success(req, res, e.stack, 200); })
 })
 
-router.post('/login',function(req, res){
-    let username = req.query.username;
-    let password = req.query.password;
-    //console.log(req.query);
-    res.send(
-        {
-           username,
-           password,
-           token:'token',
-           id_user:'id_uder',
-           success:'ok'
-        }
-    )
-})
+router.post('/register', async function (req, res) {
+    const client = await getConnection();
 
-router.post('/register',function(req,res){
     let username = req.query.username;
     let email = req.query.email;
     let password = req.query.password;
-    let nomber_phone = req.query.nomber_phone;
-    //console.log(req.query);
+    let phone_number = req.query.phone_number;
+
+    const query_request = {
+        text: 'INSERT INTO tbl_usersdb(username, email, password, phone_number)VALUES($1 ,$2, $3, $4)',
+        values: [username, email, password, phone_number]
+    };
+
+    client.query(query_request)
+        .then(r => { console.log('true'); response.success(req, res, r, 200); })
+        .catch(e => { console.log('false'); response.success(req, res, e.stack, 200); })
+
+});
+
+router.delete('/delete', async function (req, res) {
+    const client = await getConnection();
+
+    let id = req.query.id;
+
+    const query_request = {
+        text: `DELETE FROM tbl_usersdb WHERE id=${id}`,
+    }
+
+    client.query(query_request)
+        .then(r => { console.log('true'); response.success(req, res, r, 200); })
+        .catch(e => { console.log('false'); response.success(req, res, e.stack, 400); })
+
+})
+
+router.put('/update', async function (req, res) {
+    const client = await getConnection();
+
+    let id = req.query.id;
+    let username = req.query.username;
+    let email = req.query.email;
+    let password = req.query.password;
+    let phone_number = req.query.phone_number;
+
+    const query_request = {
+        text: `UPDATE tbl_usersdb SET username=$1, email=$2, password=$3, phone_number=$4 WHERE id=${id}`,
+        values: [username, email, password, phone_number]
+
+    };
+
+    client.query(query_request)
+        .then(r => { response.success(req, res, r, 200); })
+        .catch(e => { response.success(req, res, e.stack,400);})
+})
+
+router.post('/login', function (req, res) {
+    let username = req.query.username;
+    let password = req.query.password;
     res.send(
         {
             username,
-            email,
             password,
-            nomber_phone,
-            token:'token',
-            success:'success 1',
-            id_user:'2'
+            token: 'token',
+            id_user: 'id_uder',
+            success: 'ok'
         }
     )
 })
 
+
 module.exports = router;
+

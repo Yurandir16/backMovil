@@ -1,12 +1,15 @@
-const express = require ('express');
+const express = require('express');
 
-const config = require('../Config.js')
+const config = require('../config.js')
 const user = require('./components/user/network')
+const cors = require('cors');
 
 const app = express();
 
-app.use('/api/user', user);
-//servidor activo
-app.listen(config.api.port, ()=>{
-    console.log('Servidor corriendo en el puerto =>', config.api.port);
+app.use('/api_v1/user', user);
+
+app.use(cors({origin: true, credentials: true}));
+
+app.listen(config.api.port, () => {
+    console.log('server running on port =>', config.api.port);
 });

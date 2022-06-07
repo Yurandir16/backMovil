@@ -1,11 +1,10 @@
-const express = require('express');
+import { Router } from 'express';
+import { success as _success } from '../../../network/response.js';
+import  getConnection  from '../../../model/db.js';
 
-const response = require('../../../network/response');
-const { getConnection } = require('../../../model/db');
+const router = Router();
 
-const router = express.Router();
-
-var cors = require('cors')
+import cors from 'cors';
 var allowlist = ['http://localhost:3000',''];
 
 var corsOptionsDelegate = function (req, callback){
@@ -26,8 +25,8 @@ router.get('/readme',cors(corsOptionsDelegate), async function (req, res){
     }
 
     client.query(query_request)
-    .then(r => { console.log('true'); response.success(req, res, r, 200); })
-    .catch(e => { console.log('false'); response.success(req, res, e.stack, 200); })
+    .then(r => { console.log('true'); _success(req, res, r, 200); })
+    .catch(e => { console.log('false'); _success(req, res, e.stack, 200); })
 })
 
 router.post('/register', async function (req, res) {
@@ -44,8 +43,8 @@ router.post('/register', async function (req, res) {
     };
 
     client.query(query_request)
-        .then(r => { console.log('true'); response.success(req, res, r, 200); })
-        .catch(e => { console.log('false'); response.success(req, res, e.stack, 200); })
+        .then(r => { console.log('true'); _success(req, res, r, 200); })
+        .catch(e => { console.log('false'); _success(req, res, e.stack, 200); })
 
 });
 
@@ -59,8 +58,8 @@ router.delete('/delete', async function (req, res) {
     }
 
     client.query(query_request)
-        .then(r => { console.log('true'); response.success(req, res, r, 200); })
-        .catch(e => { console.log('false'); response.success(req, res, e.stack, 400); })
+        .then(r => { console.log('true'); _success(req, res, r, 200); })
+        .catch(e => { console.log('false'); _success(req, res, e.stack, 400); })
 
 })
 
@@ -80,8 +79,8 @@ router.put('/update', async function (req, res) {
     };
 
     client.query(query_request)
-        .then(r => { response.success(req, res, r, 200); })
-        .catch(e => { response.success(req, res, e.stack,400);})
+        .then(r => { _success(req, res, r, 200); })
+        .catch(e => { _success(req, res, e.stack,400);})
 })
 
 router.post('/login', function (req, res) {
@@ -99,5 +98,5 @@ router.post('/login', function (req, res) {
 })
 
 
-module.exports = router;
+export default router;
 

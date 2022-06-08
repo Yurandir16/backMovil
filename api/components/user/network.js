@@ -1,32 +1,43 @@
 import { Router } from 'express';
 import { success as _success } from '../../../network/response.js';
-import  getConnection  from '../../../model/db.js';
+import { getData } from '../../../model/db.js';
+import { getUser } from '../../../model/Users.js';
 
 const router = Router();
 
 import cors from 'cors';
-var allowlist = ['http://localhost:3000',''];
+var allowlist = ['http://localhost:3000', ''];
 
-var corsOptionsDelegate = function (req, callback){
+var corsOptionsDelegate = function (req, callback) {
     var corOptions;
-    if (allowlist.indexOf(req.header('Origin'))!==-1){
-        corOptions = { origin:true }
+    if (allowlist.indexOf(req.header('Origin')) !== -1) {
+        corOptions = { origin: true }
     } else {
-        corOptions ={ origin:false }
+        corOptions = { origin: false }
     }
     callback(null, corOptions)
 }
 
-router.get('/readme',cors(corsOptionsDelegate), async function (req, res){
+router.get('/all_users_orm', async function (req, res) {
+    getUser.findAll({ attributes: ['username', 'email', 'password', 'phone_number'] })
+        .then(users => {
+            res.send(users.trim())
+        })
+        .catch(err => {
+            console.log(err)
+        })
+});
+
+router.get('/readme', cors(corsOptionsDelegate), async function (req, res) {
     const client = await getConnection();
-    
-    const query_request ={
-        text:'SELECT * FROM tbl_usersdb'
+
+    const query_request = {
+        text: 'SELECT * FROM tbl_usersdb'
     }
 
     client.query(query_request)
-    .then(r => { console.log('true'); _success(req, res, r, 200); })
-    .catch(e => { console.log('false'); _success(req, res, e.stack, 200); })
+        .then(r => { console.log('true'); _success(req, res, r, 200); })
+        .catch(e => { console.log('false'); _success(req, res, e.stack, 200); })
 })
 
 router.post('/register', async function (req, res) {
@@ -80,7 +91,7 @@ router.put('/update', async function (req, res) {
 
     client.query(query_request)
         .then(r => { _success(req, res, r, 200); })
-        .catch(e => { _success(req, res, e.stack,400);})
+        .catch(e => { _success(req, res, e.stack, 400); })
 })
 
 router.post('/login', function (req, res) {

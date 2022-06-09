@@ -19,6 +19,9 @@ async function getConnection() {
 const sequelizeClient = new Sequelize(db.database, db.user, db.password, {
     host: db.host,
     dialect: 'postgres',
+    define: {
+        timestamps: false
+    }
 });
 
 sequelizeClient.authenticate()

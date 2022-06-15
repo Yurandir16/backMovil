@@ -1,7 +1,6 @@
 import { Router } from 'express';
-import { success as _success } from '../../../network/response.js';
-import { getData } from '../../../model/db.js';
-import { getUser } from '../../../model/Users.js';
+import { getUser } from '../model/Users.js';
+
 
 const router = Router();
 
@@ -32,7 +31,8 @@ router.get('/all_users_orm', async function (req, res) {
 router.post('/create_users_orm', async function (req, res) {
 
     getUser.create({
-        username: req.query.username,
+        name: req.query.name,
+        lastName:req.query.lastName,
         email: req.query.email,
         password: req.query.password,
         phone_number: req.query.phone_number

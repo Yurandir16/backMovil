@@ -1,7 +1,6 @@
 import express from 'express';
-
-import { api } from './config.js';
-import user from './api/components/user/network.js';
+import { api } from './config/Config.js';
+import user from './router/user.js';
 import cors from 'cors';
 
 const app = express();

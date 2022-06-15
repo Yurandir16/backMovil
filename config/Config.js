@@ -8,3 +8,11 @@ export const db = {
     password: '7834310579217517b2e136229ce7cb853b5b5924eaa9886b4679776102e78d30',
     port: '5432'
 };
+
+// export const db ={
+//     user:'postgres',
+//     host:'localhost',
+//     database:'CSDB',
+//     password:'garcia200116',
+//     port:'5432'
+// }

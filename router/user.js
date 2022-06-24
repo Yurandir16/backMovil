@@ -1,10 +1,16 @@
 import { Router } from 'express';
 import { getUser } from '../model/Users.js';
+import { getFather } from '../model/father.js';
 
 const router = Router();
 
 router.get('/all_users_orm', async function (req, res) {
-    getUser.findAll({ attributes: ['name'] })
+    getUser.findAll({ 
+        include:{
+            model:getFather,
+            attributes:['name','lastNamef','lastNamem','age']
+        },
+        attributes: ['name','lastName','email','password','phone_number'] })
         .then(users => {
             res.send(users)
         })

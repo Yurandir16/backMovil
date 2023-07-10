@@ -4,7 +4,7 @@ import Sequelize from 'sequelize';
 import path from 'path';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
-import { db } from '../config/config.js';
+import { db } from '../config/Config.js';
 
 const __filename = fileURLToPath(import.meta.url);
 

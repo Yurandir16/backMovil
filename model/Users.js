@@ -1,15 +1,14 @@
 import { getData } from './db.js';
-import Sequelize from 'sequelize';
 import { DataTypes } from 'sequelize';
 import bcrypt from 'bcrypt';
-import { getFather } from "./father.js";
+//import { getLocal } from './Local.js';
 
 const User = getData.sequelizeClient.define('cat_users', {
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
-        allowNull: false,
-        primaryKey: true
+        primaryKey: true,
+        allowNull: false
     },
     name: {
         type: DataTypes.STRING,
@@ -36,6 +35,7 @@ const User = getData.sequelizeClient.define('cat_users', {
     {
         tableName: 'cat_users',
         freezeTableName: true,
+        timestamps: false,
         hooks: {
             beforeCreate: (user, options) => {
                 {
@@ -45,9 +45,6 @@ const User = getData.sequelizeClient.define('cat_users', {
         }
     });
 
-User.hasMany(getFather, {
-    foreignKey: 'catUserId'
-});
-getFather.belongsTo(User);
+//User.hasMany(getLocal, { foreignKey: 'userId' });
 
-export const getUser = User;
+export const getUsers = User;

@@ -1,19 +1,17 @@
 import express from 'express';
 import { api } from './config/Config.js';
 import user from './router/user.js';
-import fathers from './router/fathers.js';
-import sons from './router/sons.js';
-import image from './router/imagenes.js'
+import image from './router/local.js'
+import login from './router/login.js'
+import recovery from './router/recoverypass.js'
 import cors from 'cors';
 
 const app = express();
 
 app.use('/api_v1/user', user);
-app.use('/api_v1/fathers', fathers);
-app.use('/api_v1/sons',sons);
-app.use('/api_v1/image',image);
-
-
+app.use('/api_v1/local',image);
+app.use('/api_v1/login',login)
+app.use('/api_v1/recovery',recovery);
 app.use(cors({origin: true, credentials: true}));
 
 app.listen(api.port, () => {
